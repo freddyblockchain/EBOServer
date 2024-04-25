@@ -9,7 +9,8 @@ import com.mygdx.game.Enums.Direction
 import com.mygdx.game.Enums.PlayerState
 import com.mygdx.game.GameObjects.GameObject.MoveableObject
 
-class Player(gameObjectData: GameObjectData, size: Vector2)
+enum class PLAYER_STATUS {ALIVE, DEAD}
+class Player(gameObjectData: GameObjectData, size: Vector2, val sessionKey: String)
     : MoveableObject(gameObjectData, size) {
     override var speed: Float = 2f
     override val cannotMoveStrategy = NoAction()

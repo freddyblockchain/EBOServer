@@ -1,13 +1,12 @@
 
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
 import com.example.game.JsonParser
-import com.example.game.basePath
+import com.example.game.Networking.basePath
 import com.mygdx.game.Area.Area
 import com.mygdx.game.GameObjects.GameObject.GameObject
 import com.mygdx.game.GameObjects.Ground
@@ -28,7 +27,7 @@ fun initAreas(){
 }
 
 fun HandleArea(areaName: String): Area {
-    val root = JsonParser.getRoot("${basePath}/levels/${areaName}/data.json")
+    val root = JsonParser.getRoot("$basePath/levels/${areaName}/data.json")
     val correspondingArea = AreaManager.areas.firstOrNull { it.areaIdentifier == root.customFields.World }
         ?:
         Area(root.customFields.World)

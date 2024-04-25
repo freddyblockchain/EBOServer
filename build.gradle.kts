@@ -5,8 +5,8 @@ val gdxVersion = "1.12.1"
 
 plugins {
     application
-    kotlin("jvm") version "1.6.10"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
+    kotlin("jvm") version "1.9.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
 }
 
 group = "com.example"
@@ -31,6 +31,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("com.algorand:algosdk:1.13.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation ("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
     implementation("com.badlogicgames.gdx:gdx:$gdxVersion")
 

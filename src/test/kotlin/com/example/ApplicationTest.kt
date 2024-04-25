@@ -44,7 +44,7 @@ class ApplicationTest {
         }
         client.post("/authorize") {
             contentType(ContentType.Application.Json)
-            body = Json.encodeToString(AuthorizationData("signedMessage", 1000, "dsffdwqdqdada", "2123421"))
+            body = Json.encodeToString(AuthorizationData("signedMessage", 1000, "dsffdwqdqdada", "2123421", 100))
         }.apply {
             assertEquals(HttpStatusCode.OK, status)
             println("sessionKey " + bodyAsText())
