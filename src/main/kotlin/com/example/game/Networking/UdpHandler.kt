@@ -1,11 +1,13 @@
+import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.connectionMap
 import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Actions.Action
 import com.example.game.JsonConfig
 import com.example.game.Networking.Models.ConnectionSettings
 import com.example.game.Networking.Models.GameState
-import com.example.game.Networking.globalOutgoingSocket
+import com.example.game.Networking.serverOutgoingSocket
 import com.example.game.Networking.serverPort
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.DatagramPacket
@@ -13,6 +15,8 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 import java.nio.charset.StandardCharsets
 
+@Serializable
+data class UdpPacket(val action: Action, val sessionKey: String)
 fun udpReceive() {
     val buffer = ByteArray(1024)  // Buffer for incoming data
     val globalIngoingSocket = DatagramSocket(serverPort)  // Listen on port 50000
@@ -22,9 +26,16 @@ fun udpReceive() {
             val packet = DatagramPacket(buffer, buffer.size)
             udpSocket.receive(packet)  // Receive a packet (blocking call)
             val receivedText = String(packet.data, 0, packet.length).trim()
-            val action = JsonConfig.json.decodeFromString<Action>(receivedText)
+            val packetData = JsonConfig.json.decodeFromString<UdpPacket>(receivedText)
+            SessionManager.actionList.add(Pair(packetData.sessionKey, packetData.action))
+
+            if(SessionManager.actionsProcessedSoFar > 0){
+                SessionManager.actionList =  SessionManager.actionList.drop(SessionManager.actionsProcessedSoFar + 1).toMutableList()
+                SessionManager.actionsProcessedSoFar = 0
+            }
+
             println("Received from UDP client: $receivedText")
-            println(action.toString())
+            println(packetData.toString())
             // Here you could add logic to process the data
         }
     }
@@ -39,7 +50,6 @@ fun broadcastGameState(gameState: GameState) {
     }
 }
 fun sendUdpMessage(connectionSettings: ConnectionSettings, message: ByteArray) {
-    globalOutgoingSocket.use { socket ->
         // Create an InetAddress object from the IP address string
         val address = InetAddress.getByName(connectionSettings.ipAddress)
 
@@ -47,7 +57,6 @@ fun sendUdpMessage(connectionSettings: ConnectionSettings, message: ByteArray) {
         val packet = DatagramPacket(message, message.size, address, connectionSettings.port)
 
         // Send the packet
-        socket.send(packet)
-        println("Message sent to ${connectionSettings.ipAddress} on port ${connectionSettings.port}")
-    }
+        serverOutgoingSocket.send(packet)
+
 }

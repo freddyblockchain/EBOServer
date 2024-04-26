@@ -4,4 +4,4 @@ import java.net.DatagramSocket
 
 val basePath = System.getenv("ASSETS_PATH") ?: throw IllegalStateException("Assets path not configured")
 val serverPort = 50000
-val globalOutgoingSocket = DatagramSocket()
+val serverOutgoingSocket = DatagramSocket(0)

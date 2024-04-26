@@ -1,5 +1,9 @@
 package com.example.game
 
+import broadcastGameState
+import com.example.Sessions.SessionManager
+import com.example.game.Networking.Models.GameState
+import com.example.game.Networking.Models.PlayerServerData
 import com.mygdx.game.Managers.AreaManager
 
 class GameServerMain {
@@ -26,5 +30,16 @@ class GameServerMain {
         for(gameObject in AreaManager.getActiveArea()!!.gameObjects.toMutableList()){
             gameObject.frameTask()
         }
+        PlayerInputHandler.processActions()
+
+        val gameState = calculateGameState()
+        broadcastGameState(gameState)
+    }
+    fun calculateGameState(): GameState{
+        val gameStateMap = SessionManager.playerMap.mapValues { (key, value) ->
+            val playerPos = value.currentPosition()
+            PlayerServerData(Pair(playerPos.x, playerPos.y), value.state, value.playerNum)
+        }
+        return GameState(gameStateMap)
     }
 }

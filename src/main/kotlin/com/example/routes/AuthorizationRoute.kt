@@ -8,8 +8,11 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
+data class PlayerInitData(val sessionKey: String, val playerNum: Int)
 fun Route.authorize(){
     route("/authorize") {
         post {
@@ -17,8 +20,8 @@ fun Route.authorize(){
             if(authorizationDataIsValid(authorizationData)){
                 val newSessionKey = UUID.randomUUID().toString()
                 val ipAddress = call.request.origin.remoteHost
-                GameServerInit.InitPlayer(newSessionKey, ipAddress, authorizationData.localPort)
-                call.respond(HttpStatusCode.OK, newSessionKey)
+                val playerNum = GameServerInit.InitPlayer(newSessionKey, ipAddress, authorizationData.localPort)
+                call.respond(HttpStatusCode.OK, PlayerInitData(newSessionKey, playerNum))
             }
             else {
                 call.respond(HttpStatusCode.Unauthorized, "Authorization failed")

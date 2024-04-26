@@ -3,6 +3,7 @@
 package com.example
 
 import Customer
+import com.example.game.Networking.GameServerInit
 import com.example.models.AuthorizationData
 import io.ktor.server.routing.*
 import io.ktor.http.*
@@ -18,6 +19,8 @@ import io.ktor.client.statement.*
 import kotlin.test.*
 import io.ktor.server.testing.*
 import com.example.plugins.*
+import com.mygdx.game.Area.Area
+import com.mygdx.game.Managers.AreaManager
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -29,6 +32,8 @@ class ApplicationTest {
             configureRouting()
             configureSerialization()
             configureSecurity()
+            AreaManager.areas.add(Area("testArea"))
+            AreaManager.setActiveArea("testArea")
         }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
