@@ -12,6 +12,9 @@ import com.mygdx.game.GameObjects.GameObject.GameObject
 import com.mygdx.game.GameObjects.Ground
 import com.mygdx.game.Managers.AreaManager
 import java.io.File
+import kotlin.math.pow
+import kotlin.math.sqrt
+
 fun initAreas(){
     //base local path: "/home/frederik/Downloads/kotlin-blockchain-server/src/assets"
     val directoryPath = "$basePath/levels/"  // Path inside the assets directory
@@ -59,6 +62,11 @@ fun InsideCircle(circleObject: GameObject, circleRadius: Float, targetObject: Ga
         circleRadius
     )
     return circleToCheck.contains(targetObject.currentPosition())
+}
+
+fun distance(point1: Vector2, point2: Vector2): Float {
+    val first = (point2.x - point1.x).pow(2) + (point2.y - point1.y).pow(2)
+    return sqrt(first)
 }
 /*
 

@@ -1,14 +1,16 @@
 package com.example.game
 
 import broadcastGameState
+import com.badlogic.gdx.math.Vector2
 import com.example.Sessions.SessionManager
 import com.example.game.Networking.Models.GameState
 import com.example.game.Networking.Models.PlayerServerData
 import com.mygdx.game.Managers.AreaManager
 
+val tickTime = 1000L / 2// Frame time in milliseconds for 60 FPS
 class GameServerMain {
     fun mainLoop() {
-        val frameTime = 1000L / 60  // Frame time in milliseconds for 60 FPS
+        var gameStateNum = 0
         while (true) {
             val startTime = System.currentTimeMillis()
 
@@ -18,28 +20,37 @@ class GameServerMain {
             // Calculate how long to delay to maintain the frame rate
             val endTime = System.currentTimeMillis()
             val deltaTime = endTime - startTime
-            if (deltaTime < frameTime) {
-                Thread.sleep(frameTime - deltaTime)
+            if (deltaTime < tickTime) {
+                Thread.sleep(tickTime - deltaTime)
             }
+            gameStateNum += 1
         }
     }
 
     private fun updateGameState() {
-        //Input first
-        //inputProcessor.handleInput()
+        PlayerInputHandler.processActions()
         for(gameObject in AreaManager.getActiveArea()!!.gameObjects.toMutableList()){
             gameObject.frameTask()
         }
-        PlayerInputHandler.processActions()
-
+        val player = SessionManager.playerMap.firstNotNullOfOrNull { it.value}
+        player?.move(Vector2(1f,0f))
+        //println("${player?.currentPosition()}  time is " + System.currentTimeMillis())
         val gameState = calculateGameState()
         broadcastGameState(gameState)
+        /*for(i in 1 .. 3){
+            runBlocking {
+                broadcastGameState(gameState)
+                delay(1L)
+            }
+        }*/
+
     }
     fun calculateGameState(): GameState{
         val gameStateMap = SessionManager.playerMap.mapValues { (key, value) ->
             val playerPos = value.currentPosition()
-            PlayerServerData(Pair(playerPos.x, playerPos.y), value.state, value.playerNum)
+            PlayerServerData(Pair(playerPos.x, playerPos.y), value.state, value.playerNum, value.speed, Pair(value.currentUnitVector.x, value.currentUnitVector.y))
         }
-        return GameState(gameStateMap)
+        return GameState(gameStateMap, System.currentTimeMillis())
     }
+
 }

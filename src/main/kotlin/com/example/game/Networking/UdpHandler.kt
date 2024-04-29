@@ -27,12 +27,12 @@ fun udpReceive() {
             udpSocket.receive(packet)  // Receive a packet (blocking call)
             val receivedText = String(packet.data, 0, packet.length).trim()
             val packetData = JsonConfig.json.decodeFromString<UdpPacket>(receivedText)
-            SessionManager.actionList.add(Pair(packetData.sessionKey, packetData.action))
 
             if(SessionManager.actionsProcessedSoFar > 0){
                 SessionManager.actionList =  SessionManager.actionList.drop(SessionManager.actionsProcessedSoFar + 1).toMutableList()
                 SessionManager.actionsProcessedSoFar = 0
             }
+            SessionManager.actionList.add(Pair(packetData.sessionKey, packetData.action))
 
             println("Received from UDP client: $receivedText")
             println(packetData.toString())
@@ -48,6 +48,7 @@ fun broadcastGameState(gameState: GameState) {
         val connectionSettings = connectionMap[entry.key] ?: ConnectionSettings("",0)
         sendUdpMessage(connectionSettings, message)
     }
+   // println("Sent game state!" + gameState)
 }
 fun sendUdpMessage(connectionSettings: ConnectionSettings, message: ByteArray) {
         // Create an InetAddress object from the IP address string
@@ -56,7 +57,6 @@ fun sendUdpMessage(connectionSettings: ConnectionSettings, message: ByteArray) {
         // Prepare the packet to send
         val packet = DatagramPacket(message, message.size, address, connectionSettings.port)
 
-        // Send the packet
         serverOutgoingSocket.send(packet)
 
 }
