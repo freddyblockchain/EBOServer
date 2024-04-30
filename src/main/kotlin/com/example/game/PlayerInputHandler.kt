@@ -7,6 +7,7 @@ import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Actions.Action
 import distance
 import getUnitVectorTowardsPoint
+import kotlin.math.floor
 
 class PlayerInputHandler {
     companion object {
@@ -28,8 +29,9 @@ class PlayerInputHandler {
                     val playerPos = player.currentPosition()
                     val targetPos = Vector2(action.pos.first, action.pos.second)
                     val toGo = getUnitVectorTowardsPoint(playerPos,targetPos)
-                    val distance = ceil(distance(playerPos, targetPos) * player.speed)
+                    val distance = ceil((distance(playerPos, targetPos) / player.speed))
 
+                    println("trying to go to " + targetPos)
                     player.movementFrames = distance
                     player.currentUnitVector = toGo
                 }

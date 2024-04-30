@@ -15,7 +15,7 @@ data class MovementIntent(val unitVector: Vector2, val movementFrames: Int)
 class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int)
     : MoveableObject(gameObjectData, size) {
 
-    override var speed: Float = 20f
+    override var speed: Float = 4f
     override val cannotMoveStrategy = NoAction()
     override var direction = Direction.RIGHT
     override var canChangeDirection = true
@@ -28,6 +28,10 @@ class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int)
         if(movementFrames > 0){
             this.move(this.currentUnitVector)
             movementFrames -= 1
+            println("playerPos =  " + this.currentPosition())
+
+
+            println("player Moving! movement frames left: " + movementFrames)
         } else{
             currentUnitVector = Vector2(0f,0f)
         }

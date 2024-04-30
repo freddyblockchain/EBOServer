@@ -7,7 +7,7 @@ import com.example.game.Networking.Models.GameState
 import com.example.game.Networking.Models.PlayerServerData
 import com.mygdx.game.Managers.AreaManager
 
-val tickTime = 1000L / 2// Frame time in milliseconds for 60 FPS
+val tickTime = 1000L / 20// Frame time in milliseconds for 60 FPS
 class GameServerMain {
     fun mainLoop() {
         var gameStateNum = 0
@@ -32,8 +32,8 @@ class GameServerMain {
         for(gameObject in AreaManager.getActiveArea()!!.gameObjects.toMutableList()){
             gameObject.frameTask()
         }
-        val player = SessionManager.playerMap.firstNotNullOfOrNull { it.value}
-        player?.move(Vector2(1f,0f))
+        /*val player = SessionManager.playerMap.firstNotNullOfOrNull { it.value}
+        player?.move(Vector2(1f,0f))*/
         //println("${player?.currentPosition()}  time is " + System.currentTimeMillis())
         val gameState = calculateGameState()
         broadcastGameState(gameState)
