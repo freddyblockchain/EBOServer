@@ -1,7 +1,7 @@
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.connectionMap
 import com.example.Sessions.SessionManager.Companion.playerMap
-import com.example.game.Actions.Action
+import com.example.game.Actions.TouchAction
 import com.example.game.JsonConfig
 import com.example.game.Networking.Models.ConnectionSettings
 import com.example.game.Networking.Models.GameState
@@ -16,7 +16,7 @@ import java.net.InetAddress
 import java.nio.charset.StandardCharsets
 
 @Serializable
-data class UdpPacket(val action: Action, val sessionKey: String)
+data class UdpPacket(val action: TouchAction, val sessionKey: String)
 fun udpReceive() {
     val buffer = ByteArray(1024)  // Buffer for incoming data
     val globalIngoingSocket = DatagramSocket(serverPort)  // Listen on port 50000

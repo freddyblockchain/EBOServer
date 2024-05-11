@@ -4,10 +4,11 @@ import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.math.Vector2
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.playerMap
-import com.example.game.Actions.Action
+import com.example.game.Actions.TouchAction
+import com.example.game.GameObjects.MoveableObjects.Projectile.Fireball
+import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
 import distance
 import getUnitVectorTowardsPoint
-import kotlin.math.floor
 
 class PlayerInputHandler {
     companion object {
@@ -21,8 +22,8 @@ class PlayerInputHandler {
             }
 
         }
-        private fun processAction(sessionKey: String, action: Action){
-            if(action is Action.TouchAction){
+        private fun processAction(sessionKey: String, action: TouchAction){
+            if(action is TouchAction.Move){
                 println("im here!")
                 val player = playerMap[sessionKey]
                 if(player != null){
@@ -36,6 +37,15 @@ class PlayerInputHandler {
                     player.currentUnitVector = toGo
                 }
 
+            }
+            if(action is TouchAction.FireAbility){
+                val player = playerMap[sessionKey]
+                if(player != null){
+                    val playerPos = player.currentPosition()
+                    val targetPos = Vector2(action.pos.first, action.pos.second)
+                    val direction = getUnitVectorTowardsPoint(playerPos,targetPos)
+                    player.shootProjectile(Fireball(GameObjectData(x = playerPos.x.toInt(), y= playerPos.y.toInt()),  Vector2(60f,30f), direction))
+                }
             }
         }
     }

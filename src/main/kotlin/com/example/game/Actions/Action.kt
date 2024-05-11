@@ -4,8 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Action {
+sealed interface TouchAction {
     @Serializable
-    @SerialName("TouchAction")
-    data class TouchAction(val pos: Pair<Float, Float>) : Action
+    @SerialName("Move")
+    data class Move(val pos: Pair<Float,Float>): TouchAction
+    @Serializable
+    @SerialName("FireAbility")
+    data class FireAbility(val pos: Pair<Float,Float>): TouchAction
 }

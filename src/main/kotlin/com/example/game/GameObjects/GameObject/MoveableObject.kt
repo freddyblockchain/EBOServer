@@ -3,6 +3,9 @@ package com.mygdx.game.GameObjects.GameObject
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
+import com.example.game.Networking.Models.GameObjectType
+import com.example.game.Networking.Models.ServerGameObject
+import com.example.game.Networking.Models.ServerGameObjectData
 import com.mygdx.game.CannotMoveStrategy.CannotMoveStrategy
 import com.mygdx.game.Collition.CollisionType
 import com.mygdx.game.Managers.AreaManager
@@ -61,5 +64,9 @@ abstract class MoveableObject(gameObjectData: GameObjectData, size: Vector2) :
     }
     fun getCurrentSpeed(): Float {
         return  speed
+    }
+
+    fun DefaultMoveableObjectData(gameObjectNum: Int, type: GameObjectType): ServerGameObjectData{
+        return ServerGameObjectData(gameObjectNum = gameObjectNum, unitVectorDirection = Pair(currentUnitVector.x, currentUnitVector.y), speed = this.speed, position = Pair(currentPosition().x, currentPosition().y), gameObjectType = type)
     }
 }

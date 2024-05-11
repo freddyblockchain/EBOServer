@@ -1,11 +1,13 @@
 package com.example.game
 
 import broadcastGameState
-import com.badlogic.gdx.math.Vector2
-import com.example.Sessions.SessionManager
 import com.example.game.Networking.Models.GameState
-import com.example.game.Networking.Models.PlayerServerData
+import com.example.game.Networking.Models.ServerGameObjectConverter
 import com.mygdx.game.Managers.AreaManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 val tickTime = 1000L / 20// Frame time in milliseconds for 60 FPS
 class GameServerMain {
@@ -36,21 +38,22 @@ class GameServerMain {
         player?.move(Vector2(1f,0f))*/
         //println("${player?.currentPosition()}  time is " + System.currentTimeMillis())
         val gameState = calculateGameState()
-        broadcastGameState(gameState)
-        /*for(i in 1 .. 3){
-            runBlocking {
+
+        val receiveInputScope = CoroutineScope(Dispatchers.IO)
+        receiveInputScope.launch {
+            for(i in 1..3){
                 broadcastGameState(gameState)
                 delay(1L)
             }
-        }*/
-
+        }
     }
     fun calculateGameState(): GameState{
-        val gameStateMap = SessionManager.playerMap.mapValues { (key, value) ->
-            val playerPos = value.currentPosition()
-            PlayerServerData(Pair(playerPos.x, playerPos.y), value.state, value.playerNum, value.speed, Pair(value.currentUnitVector.x, value.currentUnitVector.y))
+        val gameStateObjects = AreaManager.getActiveArea()!!.gameObjects.filter { it is ServerGameObjectConverter }
+        val serverGameObjects = gameStateObjects.map {
+            val gameStateConverter = it as ServerGameObjectConverter
+            gameStateConverter.converToServerGameObject()
         }
-        return GameState(gameStateMap, System.currentTimeMillis())
+        return GameState(serverGameObjects, System.currentTimeMillis())
     }
 
 }
