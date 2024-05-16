@@ -1,6 +1,7 @@
 package com.example.game
 
 import broadcastGameState
+import com.example.game.Networking.Models.GameObjectType
 import com.example.game.Networking.Models.GameState
 import com.example.game.Networking.Models.ServerGameObjectConverter
 import com.mygdx.game.Managers.AreaManager
@@ -52,6 +53,10 @@ class GameServerMain {
         val serverGameObjects = gameStateObjects.map {
             val gameStateConverter = it as ServerGameObjectConverter
             gameStateConverter.converToServerGameObject()
+        }
+        val fireball = serverGameObjects.find { it.serverGameObjectData.gameObjectType == GameObjectType.FIREBALL }
+        if(fireball != null){
+            println("fireball x is : " + fireball.serverGameObjectData.position.first + "fireball y: " + fireball.serverGameObjectData.position.second)
         }
         return GameState(serverGameObjects, System.currentTimeMillis())
     }
