@@ -31,7 +31,7 @@ abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var uni
 
 fun Player.shootProjectile(projectile: Projectile){
     val area = AreaManager.getActiveArea()!!
-    val projectileStartPos = this.currentPosition() + (projectile.unitVectorDirection * 50f) - Vector2(projectile.size.x / 2,projectile.size.y / 2)
+    val projectileStartPos = this.currentMiddle + (projectile.unitVectorDirection * 80f) - Vector2(projectile.size.x / 2,projectile.size.y / 2)
     projectile.setPosition(projectileStartPos)
     area.gameObjects.add(projectile)
 }

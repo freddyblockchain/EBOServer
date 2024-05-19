@@ -7,6 +7,7 @@ import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Actions.TouchAction
 import com.example.game.GameObjects.MoveableObjects.Projectile.Fireball
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
+import com.mygdx.game.minus
 import distance
 import getUnitVectorTowardsPoint
 
@@ -41,7 +42,7 @@ class PlayerInputHandler {
             if(action is TouchAction.FireAbility){
                 val player = playerMap[sessionKey]
                 if(player != null){
-                    val playerPos = player.currentPosition()
+                    val playerPos = player.currentMiddle
                     val targetPos = Vector2(action.pos.first, action.pos.second)
                     val direction = getUnitVectorTowardsPoint(playerPos,targetPos)
                     player.shootProjectile(Fireball(GameObjectData(x = playerPos.x.toInt(), y= playerPos.y.toInt()),  Vector2(60f,30f), direction))
