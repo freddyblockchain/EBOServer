@@ -42,7 +42,8 @@ fun udpReceive() {
 }
 
 fun broadcastGameState(gameState: GameState) {
-    val message = Json.encodeToString(gameState).toByteArray(StandardCharsets.UTF_8)
+    val json = JsonConfig.json.encodeToString(gameState)
+    val message = json.toByteArray(StandardCharsets.UTF_8)
     //Avoid concurrent modification shinanigans
     playerMap.forEach { entry ->
         val connectionSettings = connectionMap[entry.key] ?: ConnectionSettings("",0)

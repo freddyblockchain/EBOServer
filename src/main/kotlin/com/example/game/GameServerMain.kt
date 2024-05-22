@@ -48,15 +48,11 @@ class GameServerMain {
             }
         }
     }
-    fun calculateGameState(): GameState{
+    fun calculateGameState(): GameState {
         val gameStateObjects = AreaManager.getActiveArea()!!.gameObjects.filter { it is ServerGameObjectConverter }
         val serverGameObjects = gameStateObjects.map {
             val gameStateConverter = it as ServerGameObjectConverter
             gameStateConverter.converToServerGameObject()
-        }
-        val fireball = serverGameObjects.find { it.serverGameObjectData.gameObjectType == GameObjectType.FIREBALL }
-        if(fireball != null){
-            println("fireball x is : " + fireball.serverGameObjectData.position.first + "fireball y: " + fireball.serverGameObjectData.position.second)
         }
         return GameState(serverGameObjects, System.currentTimeMillis())
     }

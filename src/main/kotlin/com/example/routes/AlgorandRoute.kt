@@ -31,7 +31,6 @@ fun Route.algorand() {
     route("/algo") {
         post {
             algodClient = AlgodClient(ALGOD_API_ADDR,ALGOD_PORT,ALGOD_API_TOKEN)
-            println("about to send transaction")
             firstTransaction(sender)
             call.respondText("Successfull")
         }

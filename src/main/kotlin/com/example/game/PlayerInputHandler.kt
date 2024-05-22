@@ -25,7 +25,6 @@ class PlayerInputHandler {
         }
         private fun processAction(sessionKey: String, action: TouchAction){
             if(action is TouchAction.Move){
-                println("im here!")
                 val player = playerMap[sessionKey]
                 if(player != null){
                     val playerPos = player.currentPosition()
@@ -33,7 +32,6 @@ class PlayerInputHandler {
                     val toGo = getUnitVectorTowardsPoint(playerPos,targetPos)
                     val distance = ceil((distance(playerPos, targetPos) / player.speed))
 
-                    println("trying to go to " + targetPos)
                     player.movementFrames = distance
                     player.currentUnitVector = toGo
                 }

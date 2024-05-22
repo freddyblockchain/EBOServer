@@ -23,7 +23,6 @@ class NoAction: CannotMoveStrategy {
 
 class RemoveObject: CannotMoveStrategy {
     override fun CannotMoveAction(moveableObject: MoveableObject) {
-        println("removed object! ")
         moveableObject.remove()
     }
 }

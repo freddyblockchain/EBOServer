@@ -20,18 +20,17 @@ abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var uni
     val gameObjectNum = GameObjectNumManager.getNextGameNum()
     override fun frameTask() {
         super.frameTask()
-        println("projectile pos: " + Vector2(this.sprite.x, this.sprite.y))
         this.move(unitVectorDirection)
     }
 
     override fun converToServerGameObject(): ServerGameObject {
-        return FireballData(DefaultMoveableObjectData(gameObjectNum, GameObjectType.FIREBALL))
+        return ServerGameObject(DefaultMoveableObjectData(gameObjectNum, GameObjectType.FIREBALL))
     }
 }
 
 fun Player.shootProjectile(projectile: Projectile){
     val area = AreaManager.getActiveArea()!!
-    val projectileStartPos = this.currentMiddle + (projectile.unitVectorDirection * 80f) - Vector2(projectile.size.x / 2,projectile.size.y / 2)
+    val projectileStartPos = this.currentMiddle + (projectile.unitVectorDirection * 50f) - Vector2(projectile.size.x / 2,projectile.size.y / 2)
     projectile.setPosition(projectileStartPos)
     area.gameObjects.add(projectile)
 }
@@ -41,6 +40,7 @@ class ProjectileCollision(val projectile: Projectile): MoveCollision() {
     override var canMoveAfterCollision = true
     override fun collisionHappened(collidedObject: GameObject) {
         if(collidedObject is Player){
+            collidedObject.health -= 10
             AreaManager.getActiveArea()!!.gameObjects.remove(projectile)
         }
     }
