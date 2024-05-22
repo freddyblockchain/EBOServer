@@ -12,8 +12,8 @@ import initAreas
 import initObjects
 
 class GameServerInit {
-    val udpPort = 10
     companion object {
+        val playerInitPosition = Vector2(100f,-100f)
         fun Init() {
             initMappings()
             initAreas()
@@ -23,7 +23,7 @@ class GameServerInit {
 
         fun InitPlayer(newSessionKey: String, ipAddress: String, port: Int): Int{
             val gameObjectNum = GameObjectNumManager.getNextGameNum()
-            val player = Player(GameObjectData(x = 100, y = -100), Vector2(32f,32f), gameObjectNum)
+            val player = Player(GameObjectData(x = playerInitPosition.x.toInt(), y = playerInitPosition.y.toInt()), Vector2(32f,32f), gameObjectNum)
             SessionManager.connectionMap[newSessionKey] = ConnectionSettings(ipAddress, port)
             SessionManager.playerMap[newSessionKey] = player
             AreaManager.getActiveArea()!!.gameObjects.add(player)

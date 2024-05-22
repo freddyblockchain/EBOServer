@@ -9,7 +9,8 @@ import com.mygdx.game.GameObjects.MoveableObjects.Projectile.Projectile
 
 
 class Fireball(gameObjectData: GameObjectData, size: Vector2, unitVectorDirection: Vector2) : Projectile(gameObjectData, size, unitVectorDirection) {
-    override var speed = 6f
+    override var normalSpeed = 6f
+    override var currentSpeed = normalSpeed
     override val cannotMoveStrategy = RemoveObject()
     override var direction: Direction = getDirectionFromUnitVector(unitVectorDirection)
     override var canChangeDirection = true

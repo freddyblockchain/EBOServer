@@ -8,7 +8,6 @@ enum class Direction{UP,LEFT,RIGHT,DOWN}
 enum class ItemType{WORLDLEAF,KEY, WOOD, FLINT, FLUTEOFAWAKENING, FIRELANDSKEY, WASTELANDSKEY, ICELANDSKEY, VEST}
 enum class Layer {BEFORELOCATION,BEFOREGROUND,GROUND,ONGROUND,PERSON,AIR,FOREGROUND}
 enum class ConversationState {BEFORE,ONGOING}
-enum class CharacterState {STUNNED,FREE,DASHING}
 enum class Element {FIRE, ICE, EARTH}
 enum class QuestIdentifier{DOJO,FIRE}
 

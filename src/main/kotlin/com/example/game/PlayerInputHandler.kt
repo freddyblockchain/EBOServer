@@ -7,7 +7,6 @@ import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Actions.TouchAction
 import com.example.game.GameObjects.MoveableObjects.Projectile.Fireball
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
-import com.mygdx.game.minus
 import distance
 import getUnitVectorTowardsPoint
 
@@ -30,7 +29,7 @@ class PlayerInputHandler {
                     val playerPos = player.currentPosition()
                     val targetPos = Vector2(action.pos.first, action.pos.second)
                     val toGo = getUnitVectorTowardsPoint(playerPos,targetPos)
-                    val distance = ceil((distance(playerPos, targetPos) / player.speed))
+                    val distance = ceil((distance(playerPos, targetPos) / player.currentSpeed))
 
                     player.movementFrames = distance
                     player.currentUnitVector = toGo

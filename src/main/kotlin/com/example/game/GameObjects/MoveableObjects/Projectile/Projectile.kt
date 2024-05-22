@@ -40,7 +40,7 @@ class ProjectileCollision(val projectile: Projectile): MoveCollision() {
     override var canMoveAfterCollision = true
     override fun collisionHappened(collidedObject: GameObject) {
         if(collidedObject is Player){
-            collidedObject.health -= 10
+            collidedObject.isHit(projectile.currentUnitVector)
             AreaManager.getActiveArea()!!.gameObjects.remove(projectile)
         }
     }
