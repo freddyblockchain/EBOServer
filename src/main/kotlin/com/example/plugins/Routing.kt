@@ -2,6 +2,7 @@ package com.example.plugins
 
 import algorand
 import com.example.routes.authorize
+import com.example.routes.gameState
 import customerRouting
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -16,5 +17,6 @@ fun Application.configureRouting() {
         customerRouting()
         algorand()
         authorize()
+        gameState()
     }
 }

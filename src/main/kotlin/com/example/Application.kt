@@ -8,15 +8,12 @@ import com.example.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import udpReceive
 
 fun main() {
     GameServerInit.Init()
     val receiveInputScope = CoroutineScope(Dispatchers.IO)
-    val gameLoopScope = CoroutineScope(Dispatchers.IO)
     receiveInputScope.launch {  udpReceive() }
-    gameLoopScope.launch { GameServerMain().mainLoop() }
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         configureRouting()
         configureSecurity()

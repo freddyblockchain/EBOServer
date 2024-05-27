@@ -1,8 +1,11 @@
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.connectionMap
 import com.example.Sessions.SessionManager.Companion.playerMap
+import com.example.Sessions.SessionManager.Companion.playerTimeMap
+import com.example.Sessions.SessionManager.Companion.removePlayer
 import com.example.game.Actions.TouchAction
 import com.example.game.JsonConfig
+import com.example.game.Networking.MAX_CLIENT_CONNECTION_TIME
 import com.example.game.Networking.Models.ConnectionSettings
 import com.example.game.Networking.Models.GameState
 import com.example.game.Networking.serverOutgoingSocket
@@ -21,7 +24,7 @@ fun udpReceive() {
     val buffer = ByteArray(1024)  // Buffer for incoming data
     val globalIngoingSocket = DatagramSocket(serverPort)  // Listen on port 50000
     globalIngoingSocket.use { udpSocket ->
-        println("UDP Server is running on port 50000...")
+        println("new version: UDP Server is running on port 50000...")
         while (true) {
             val packet = DatagramPacket(buffer, buffer.size)
             udpSocket.receive(packet)  // Receive a packet (blocking call)
@@ -36,6 +39,7 @@ fun udpReceive() {
 
             println("Received from UDP client: $receivedText")
             println(packetData.toString())
+            playerTimeMap[packetData.sessionKey] = System.currentTimeMillis() + MAX_CLIENT_CONNECTION_TIME
             // Here you could add logic to process the data
         }
     }
@@ -45,9 +49,14 @@ fun broadcastGameState(gameState: GameState) {
     val json = JsonConfig.json.encodeToString(gameState)
     val message = json.toByteArray(StandardCharsets.UTF_8)
     //Avoid concurrent modification shinanigans
-    playerMap.forEach { entry ->
+    playerMap.toMutableMap().forEach { entry ->
         val connectionSettings = connectionMap[entry.key] ?: ConnectionSettings("",0)
         sendUdpMessage(connectionSettings, message)
+
+        if(playerTimeMap[entry.key] != null && System.currentTimeMillis() > playerTimeMap[entry.key]!!){
+            println("time passed removing player")
+            removePlayer(entry.key)
+        }
     }
    // println("Sent game state!" + gameState)
 }

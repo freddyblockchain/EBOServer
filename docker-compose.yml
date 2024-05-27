@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    image: elementalbrawlonline:0.0.1-preview
+    network_mode: "host"
+    environment:
+      - ASSETS_PATH=/app/src/assets
+    volumes:
+      - ./src/assets:/app/src/assets

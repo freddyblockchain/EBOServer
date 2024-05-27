@@ -22,6 +22,7 @@ class GameServerInit {
         }
 
         fun InitPlayer(newSessionKey: String, ipAddress: String, port: Int): Int{
+            println("IpAdress is: " + ipAddress)
             val gameObjectNum = GameObjectNumManager.getNextGameNum()
             val player = Player(GameObjectData(x = playerInitPosition.x.toInt(), y = playerInitPosition.y.toInt()), Vector2(32f,32f), gameObjectNum)
             SessionManager.connectionMap[newSessionKey] = ConnectionSettings(ipAddress, port)

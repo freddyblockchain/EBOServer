@@ -13,23 +13,25 @@ import java.util.UUID
 
 @Serializable
 data class PlayerInitData(val sessionKey: String, val playerNum: Int)
-fun Route.authorize(){
+
+fun Route.authorize() {
     route("/authorize") {
         post {
             val authorizationData = call.receive<AuthorizationData>()
-            if(authorizationDataIsValid(authorizationData)){
+            if (authorizationDataIsValid(authorizationData)) {
                 val newSessionKey = UUID.randomUUID().toString()
-                val ipAddress = call.request.origin.remoteHost
+                val ipAddress = authorizationData.ipAddress
+                println("Client IP Address: $ipAddress")
                 val playerNum = GameServerInit.InitPlayer(newSessionKey, ipAddress, authorizationData.localPort)
                 call.respond(HttpStatusCode.OK, PlayerInitData(newSessionKey, playerNum))
-            }
-            else {
+            } else {
                 call.respond(HttpStatusCode.Unauthorized, "Authorization failed")
             }
         }
     }
 }
-fun authorizationDataIsValid(authorizationData: AuthorizationData): Boolean{
+
+fun authorizationDataIsValid(authorizationData: AuthorizationData): Boolean {
     authorizationData.roundSeed
     return true
 }
