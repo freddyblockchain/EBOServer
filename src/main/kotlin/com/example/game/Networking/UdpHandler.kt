@@ -44,29 +44,3 @@ fun udpReceive() {
         }
     }
 }
-
-fun broadcastGameState(gameState: GameState) {
-    val json = JsonConfig.json.encodeToString(gameState)
-    val message = json.toByteArray(StandardCharsets.UTF_8)
-    //Avoid concurrent modification shinanigans
-    playerMap.toMutableMap().forEach { entry ->
-        val connectionSettings = connectionMap[entry.key] ?: ConnectionSettings("",0)
-        sendUdpMessage(connectionSettings, message)
-
-        if(playerTimeMap[entry.key] != null && System.currentTimeMillis() > playerTimeMap[entry.key]!!){
-            println("time passed removing player")
-            removePlayer(entry.key)
-        }
-    }
-   // println("Sent game state!" + gameState)
-}
-fun sendUdpMessage(connectionSettings: ConnectionSettings, message: ByteArray) {
-        // Create an InetAddress object from the IP address string
-        val address = InetAddress.getByName(connectionSettings.ipAddress)
-
-        // Prepare the packet to send
-        val packet = DatagramPacket(message, message.size, address, connectionSettings.port)
-
-        serverOutgoingSocket.send(packet)
-
-}

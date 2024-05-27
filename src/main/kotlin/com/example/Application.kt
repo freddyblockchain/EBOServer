@@ -14,6 +14,8 @@ fun main() {
     GameServerInit.Init()
     val receiveInputScope = CoroutineScope(Dispatchers.IO)
     receiveInputScope.launch {  udpReceive() }
+    val gameLoopScope = CoroutineScope(Dispatchers.IO)
+    gameLoopScope.launch { GameServerMain().mainLoop() }
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         configureRouting()
         configureSecurity()
