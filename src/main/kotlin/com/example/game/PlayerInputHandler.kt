@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.math.Vector2
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.playerMap
+import com.example.game.Abilities.FireballAbility
 import com.example.game.Actions.TouchAction
 import com.example.game.GameObjects.MoveableObjects.Projectile.Fireball
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
@@ -38,11 +39,10 @@ class PlayerInputHandler {
             }
             if(action is TouchAction.FireAbility){
                 val player = playerMap[sessionKey]
-                if(player != null){
-                    val playerPos = player.currentMiddle
+                if(player != null && player.abilities.any { it is FireballAbility }){
+                    val fireballAbility = player.abilities.first { it is FireballAbility }
                     val targetPos = Vector2(action.pos.first, action.pos.second)
-                    val direction = getUnitVectorTowardsPoint(playerPos,targetPos)
-                    player.shootProjectile(Fireball(GameObjectData(x = playerPos.x.toInt(), y= playerPos.y.toInt()),  Vector2(60f,30f), direction))
+                    fireballAbility.tryActivate(targetPos)
                 }
             }
         }
