@@ -21,11 +21,10 @@ class GameServerInit {
             AreaManager.setActiveArea("World1")
         }
 
-        fun InitPlayer(newSessionKey: String, ipAddress: String, port: Int): Int{
-            println("IpAdress is: " + ipAddress)
+        fun InitPlayer(newSessionKey: String, port: Int): Int{
             val gameObjectNum = GameObjectNumManager.getNextGameNum()
             val player = Player(GameObjectData(x = playerInitPosition.x.toInt(), y = playerInitPosition.y.toInt()), Vector2(32f,32f), gameObjectNum)
-            SessionManager.connectionMap[newSessionKey] = ConnectionSettings(ipAddress, port)
+            SessionManager.connectionMap[newSessionKey] = ConnectionSettings(port)
             SessionManager.playerMap[newSessionKey] = player
             AreaManager.getActiveArea()!!.gameObjects.add(player)
             return gameObjectNum

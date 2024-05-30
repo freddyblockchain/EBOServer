@@ -32,7 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-server-sse-jvm:$ktor_version")
     implementation ("io.ktor:ktor-server-forwarded-header:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("com.algorand:algosdk:1.13.0")
+    implementation("com.algorand:algosdk:2.4.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation ("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")

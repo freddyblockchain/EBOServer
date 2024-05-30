@@ -20,9 +20,7 @@ fun Route.authorize() {
             val authorizationData = call.receive<AuthorizationData>()
             if (authorizationDataIsValid(authorizationData)) {
                 val newSessionKey = UUID.randomUUID().toString()
-                val ipAddress = authorizationData.ipAddress
-                println("Client IP Address: $ipAddress")
-                val playerNum = GameServerInit.InitPlayer(newSessionKey, ipAddress, authorizationData.localPort)
+                val playerNum = GameServerInit.InitPlayer(newSessionKey, authorizationData.localPort)
                 call.respond(HttpStatusCode.OK, PlayerInitData(newSessionKey, playerNum))
             } else {
                 call.respond(HttpStatusCode.Unauthorized, "Authorization failed")
