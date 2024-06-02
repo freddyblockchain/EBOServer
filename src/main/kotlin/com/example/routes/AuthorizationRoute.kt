@@ -1,5 +1,6 @@
 package com.example.routes
 
+import com.example.Algorand.AlgorandManager
 import com.example.game.Networking.GameServerInit
 import com.example.models.AuthorizationData
 import io.ktor.http.*
@@ -19,6 +20,7 @@ fun Route.authorize() {
         post {
             val authorizationData = call.receive<AuthorizationData>()
             if (authorizationDataIsValid(authorizationData)) {
+                AlgorandManager.handleNewPlayer(authorizationData.algorandAddress)
                 val newSessionKey = UUID.randomUUID().toString()
                 val playerNum = GameServerInit.InitPlayer(newSessionKey, authorizationData.localPort)
                 call.respond(HttpStatusCode.OK, PlayerInitData(newSessionKey, playerNum))
