@@ -1,7 +1,7 @@
 package com.example.Sessions
 
 import Player
-import com.example.game.Actions.TouchAction
+import com.example.game.Actions.PlayerAction
 import com.example.game.Networking.Models.ConnectionSettings
 import com.mygdx.game.Managers.AreaManager
 
@@ -10,7 +10,7 @@ class SessionManager {
         val playerTimeMap = mutableMapOf<String,Long>()
         val playerMap = mutableMapOf<String, Player>()
         val connectionMap = mutableMapOf<String, ConnectionSettings>()
-        var actionList = mutableListOf<Pair<String,TouchAction>>()
+        var actionList = mutableListOf<Pair<String,PlayerAction>>()
         var actionsProcessedSoFar = 0
 
         fun removePlayer(sessionKey: String){

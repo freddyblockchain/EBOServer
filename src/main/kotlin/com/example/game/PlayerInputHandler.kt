@@ -5,9 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Abilities.FireballAbility
-import com.example.game.Actions.TouchAction
-import com.example.game.GameObjects.MoveableObjects.Projectile.Fireball
-import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
+import com.example.game.Actions.PlayerAction
 import distance
 import getUnitVectorTowardsPoint
 
@@ -23,8 +21,8 @@ class PlayerInputHandler {
             }
 
         }
-        private fun processAction(sessionKey: String, action: TouchAction){
-            if(action is TouchAction.Move){
+        private fun processAction(sessionKey: String, action: PlayerAction){
+            if(action is PlayerAction.Move){
                 val player = playerMap[sessionKey]
                 if(player != null){
                     val playerPos = player.currentPosition()
@@ -37,7 +35,7 @@ class PlayerInputHandler {
                 }
 
             }
-            if(action is TouchAction.FireAbility){
+            if(action is PlayerAction.FireAbility){
                 val player = playerMap[sessionKey]
                 if(player != null && player.abilities.any { it is FireballAbility }){
                     val fireballAbility = player.abilities.first { it is FireballAbility }
