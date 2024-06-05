@@ -1,19 +1,16 @@
 package com.example.routes
 
-import com.example.Algorand.AlgorandManager
+import com.example.game.Algorand.AlgorandManager
 import com.example.game.Networking.GameServerInit
 import com.example.models.AuthorizationData
 import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import java.util.UUID
 
 @Serializable
-data class PlayerInitData(val sessionKey: String, val playerNum: Int)
+data class PlayerInitData(val address: String, val playerNum: Int)
 
 fun Route.authorize() {
     route("/authorize") {
@@ -21,9 +18,8 @@ fun Route.authorize() {
             val authorizationData = call.receive<AuthorizationData>()
             if (authorizationDataIsValid(authorizationData)) {
                 AlgorandManager.handleNewPlayer(authorizationData.algorandAddress)
-                val newSessionKey = UUID.randomUUID().toString()
-                val playerNum = GameServerInit.InitPlayer(newSessionKey, authorizationData.localPort)
-                call.respond(HttpStatusCode.OK, PlayerInitData(newSessionKey, playerNum))
+                val playerNum = GameServerInit.InitPlayer(authorizationData.algorandAddress, authorizationData.localPort)
+                call.respond(HttpStatusCode.OK, PlayerInitData(authorizationData.algorandAddress, playerNum))
             } else {
                 call.respond(HttpStatusCode.Unauthorized, "Authorization failed")
             }

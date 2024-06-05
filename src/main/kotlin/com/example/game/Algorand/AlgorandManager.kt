@@ -1,5 +1,6 @@
-package com.example.Algorand
+package com.example.game.Algorand
 import EBOAlgorandClient
+import Player
 import com.algorand.algosdk.account.Account
 import com.algorand.algosdk.crypto.Address
 import com.algorand.algosdk.transaction.SignedTransaction
@@ -9,6 +10,7 @@ import com.algorand.algosdk.v2.client.Utils
 import com.algorand.algosdk.v2.client.common.Response
 import com.algorand.algosdk.v2.client.model.PendingTransactionResponse
 import com.algorand.algosdk.v2.client.model.TransactionParametersResponse
+import com.example.game.Abilities.AbilityManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,6 +21,8 @@ class AlgorandManager {
         val accountMmenonic = System.getenv("SERVER_MMEMONIC") ?: throw IllegalStateException("serverAccountNotFound")
         val serverAccount = Account(accountMmenonic)
         val goldAsa = 676111222L
+        val fireballAsa = 676532256L
+        val abilityAsas = listOf(fireballAsa)
 
         fun handleNewPlayer(newAddress: String){
             val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -83,6 +87,21 @@ class AlgorandManager {
                 e.printStackTrace()
             }
             return false
+        }
+
+        fun updatePlayerAbilities(player: Player, address: String){
+            val coroutineScope = CoroutineScope(Dispatchers.Default)
+            coroutineScope.launch {
+                val account = EBOAlgorandClient.AccountInformation(Address(address)).execute().body()
+                val EBOAssets = account.assets.filter { it.assetId in abilityAsas }.map { it.assetId }
+
+                EBOAssets.forEach {
+                    val ability = AbilityManager.abilityMap[it]!!
+                    if(ability !in player.abilities){
+                        player.abilities.add(ability)
+                    }
+                }
+            }
         }
     }
 }

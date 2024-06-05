@@ -6,6 +6,7 @@ import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.playerMap
 import com.example.game.Abilities.FireballAbility
 import com.example.game.Actions.PlayerAction
+import com.example.game.Algorand.AlgorandManager
 import distance
 import getUnitVectorTowardsPoint
 
@@ -21,9 +22,9 @@ class PlayerInputHandler {
             }
 
         }
-        private fun processAction(sessionKey: String, action: PlayerAction){
+        private fun processAction(address: String, action: PlayerAction){
+            val player = playerMap[address]
             if(action is PlayerAction.Move){
-                val player = playerMap[sessionKey]
                 if(player != null){
                     val playerPos = player.currentPosition()
                     val targetPos = Vector2(action.pos.first, action.pos.second)
@@ -36,11 +37,15 @@ class PlayerInputHandler {
 
             }
             if(action is PlayerAction.FireAbility){
-                val player = playerMap[sessionKey]
                 if(player != null && player.abilities.any { it is FireballAbility }){
                     val fireballAbility = player.abilities.first { it is FireballAbility }
                     val targetPos = Vector2(action.pos.first, action.pos.second)
-                    fireballAbility.tryActivate(targetPos)
+                    fireballAbility.tryActivate(targetPos, player)
+                }
+            }
+            if(action is PlayerAction.UpdatePlayerState){
+                if(player != null){
+                    AlgorandManager.updatePlayerAbilities(player, address)
                 }
             }
         }

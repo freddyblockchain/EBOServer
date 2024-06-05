@@ -8,8 +8,8 @@ import com.mygdx.game.Abilities.Ability
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
 import getUnitVectorTowardsPoint
 
-class FireballAbility(val player: Player): Ability(cooldown = 3f) {
-    override fun onActivate(targetPos: Vector2) {
+class FireballAbility: Ability(cooldown = 3f) {
+    override fun onActivate(targetPos: Vector2, player: Player) {
         val playerPos = player.currentMiddle
         val direction = getUnitVectorTowardsPoint(playerPos,targetPos)
         player.shootProjectile(Fireball(GameObjectData(x = playerPos.x.toInt(), y= playerPos.y.toInt()),  Vector2(60f,30f), direction))
