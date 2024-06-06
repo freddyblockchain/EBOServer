@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.math.Vector2
 import com.example.Sessions.SessionManager
 import com.example.Sessions.SessionManager.Companion.playerMap
-import com.example.game.Abilities.FireballAbility
+import com.example.game.Abilities.AbilityManager
 import com.example.game.Actions.PlayerAction
 import com.example.game.Algorand.AlgorandManager
 import distance
@@ -34,13 +34,19 @@ class PlayerInputHandler {
                     player.movementFrames = distance
                     player.currentUnitVector = toGo
                 }
-
             }
             if(action is PlayerAction.FireAbility){
-                if(player != null && player.abilities.any { it is FireballAbility }){
-                    val fireballAbility = player.abilities.first { it is FireballAbility }
+                if(player != null && player.abilities.any { it == AbilityManager.fireballAbility}){
+                    val fireballAbility = player.abilities.first { it == AbilityManager.fireballAbility }
                     val targetPos = Vector2(action.pos.first, action.pos.second)
                     fireballAbility.tryActivate(targetPos, player)
+                }
+            }
+            if(action is PlayerAction.IcicleAbility){
+                if(player != null && player.abilities.any { it == AbilityManager.icicleAbility}){
+                    val icicleAbility = player.abilities.first { it == AbilityManager.icicleAbility }
+                    val targetPos = Vector2(action.pos.first, action.pos.second)
+                    icicleAbility.tryActivate(targetPos, player)
                 }
             }
             if(action is PlayerAction.UpdatePlayerState){

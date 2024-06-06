@@ -22,7 +22,8 @@ class AlgorandManager {
         val serverAccount = Account(accountMmenonic)
         val goldAsa = 676111222L
         val fireballAsa = 676532256L
-        val abilityAsas = listOf(fireballAsa)
+        val icicleAsa = 677924248L
+        val abilityAsas = listOf(fireballAsa, icicleAsa)
 
         fun handleNewPlayer(newAddress: String){
             val coroutineScope = CoroutineScope(Dispatchers.Default)
