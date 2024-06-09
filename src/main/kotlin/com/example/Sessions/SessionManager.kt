@@ -13,14 +13,14 @@ class SessionManager {
         var actionList = mutableListOf<Pair<String,PlayerAction>>()
         var actionsProcessedSoFar = 0
 
-        fun removePlayer(sessionKey: String){
-            val player = playerMap[sessionKey]
+        fun removePlayer(address: String){
+            val player = playerMap[address]
             if(player != null){
                 AreaManager.getActiveArea()!!.gameObjects.remove(player)
             }
-            playerTimeMap.remove(sessionKey)
-            playerMap.remove(sessionKey)
-            connectionMap.remove(sessionKey)
+            playerTimeMap.remove(address)
+            playerMap.remove(address)
+            connectionMap.remove(address)
         }
     }
 }

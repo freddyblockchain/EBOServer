@@ -2,9 +2,8 @@ package com.example.game.GameObjects.GameObject
 
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
+import com.example.game.Networking.Models.FIGHTER_STATE
 import com.mygdx.game.GameObjects.GameObject.MoveableObject
-
-enum class FIGHTER_STATE {FREE, STUNNED}
 
 abstract class FightableObject(gameObjectData: GameObjectData, size: Vector2): MoveableObject(gameObjectData, size), FightableEntity {
     var launchUnitVector = Vector2(0f,0f)

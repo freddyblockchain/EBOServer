@@ -6,9 +6,7 @@ import com.algorand.algosdk.crypto.Address
 import com.algorand.algosdk.transaction.SignedTransaction
 import com.algorand.algosdk.transaction.Transaction
 import com.algorand.algosdk.util.Encoder
-import com.algorand.algosdk.v2.client.Utils
 import com.algorand.algosdk.v2.client.common.Response
-import com.algorand.algosdk.v2.client.model.PendingTransactionResponse
 import com.algorand.algosdk.v2.client.model.TransactionParametersResponse
 import com.example.game.Abilities.AbilityManager
 import kotlinx.coroutines.CoroutineScope
@@ -23,18 +21,20 @@ class AlgorandManager {
         val goldAsa = 676111222L
         val fireballAsa = 676532256L
         val icicleAsa = 677924248L
-        val abilityAsas = listOf(fireballAsa, icicleAsa)
+        val snowballAsa = 677926089L
+        val dashAsa = 678786539L
+        val abilityAsas = listOf(fireballAsa, icicleAsa, snowballAsa, dashAsa)
 
         fun handleNewPlayer(newAddress: String){
             val coroutineScope = CoroutineScope(Dispatchers.Default)
             if(!playerIsOptedIntoGold(newAddress)){
                 sendMoneyToCoverOptIn(newAddress)
-                coroutineScope.launch {
+                /*coroutineScope.launch {
                     // wait for client to opt into gold
                     delay(10000)
                     println("sending gold to new player. Have waited for player to receive money and opt into gold.")
-                    sendStartingGold(newAddress)
-                }
+                    sendGold(newAddress)
+                }*/
             }
         }
         private fun sendMoneyToCoverOptIn(receivingAddress: String){
@@ -54,23 +54,23 @@ class AlgorandManager {
             println("Sent transaction to new player")
         }
 
-        private fun sendStartingGold(receivingAddress: String){
-            val suggestedParams: Response<TransactionParametersResponse> = EBOAlgorandClient.TransactionParams().execute()
-            val amount = 1 // 1 gold
-            val ptxn: Transaction = Transaction.AssetTransferTransactionBuilder()
-                .sender(serverAccount.address)
-                .assetAmount(amount)
-                .assetIndex(goldAsa)
-                .assetReceiver(receivingAddress)
-                .suggestedParams(suggestedParams.body())
-                .build()
+        fun sendGold(receivingAddress: String, amount: Int){
+            val coroutineScope = CoroutineScope(Dispatchers.Default)
+            coroutineScope.launch {
+                val suggestedParams: Response<TransactionParametersResponse> = EBOAlgorandClient.TransactionParams().execute()
+                val ptxn: Transaction = Transaction.AssetTransferTransactionBuilder()
+                    .sender(serverAccount.address)
+                    .assetAmount(amount)
+                    .assetIndex(goldAsa)
+                    .assetReceiver(receivingAddress)
+                    .suggestedParams(suggestedParams.body())
+                    .build()
 
-            val sptxn: SignedTransaction = serverAccount.signTransaction(ptxn)
+                val sptxn: SignedTransaction = serverAccount.signTransaction(ptxn)
 
-            val encodedTxBytes: ByteArray = Encoder.encodeToMsgPack(sptxn)
-            val resp = EBOAlgorandClient.RawTransaction().rawtxn(encodedTxBytes).execute()
-
-            println("sent gold to new player")
+                val encodedTxBytes: ByteArray = Encoder.encodeToMsgPack(sptxn)
+                val resp = EBOAlgorandClient.RawTransaction().rawtxn(encodedTxBytes).execute()
+            }
         }
 
         private fun playerIsOptedIntoGold(playerAddress: String): Boolean{

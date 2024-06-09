@@ -16,6 +16,7 @@ import com.mygdx.game.times
 
 abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var unitVectorDirection: Vector2) : MoveableObject(gameObjectData, size), ServerGameObjectConverter{
 
+    abstract val gameObjectType: GameObjectType
     override val collision = ProjectileCollision(this)
     var shooter: Player? = null
     val gameObjectNum = GameObjectNumManager.getNextGameNum()
@@ -25,7 +26,7 @@ abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var uni
     }
 
     override fun converToServerGameObject(): ServerGameObject {
-        return ServerGameObject(DefaultMoveableObjectData(gameObjectNum, GameObjectType.FIREBALL))
+        return ServerGameObject(DefaultMoveableObjectData(gameObjectNum, this.gameObjectType))
     }
 }
 
@@ -37,13 +38,14 @@ fun Player.shootProjectile(projectile: Projectile){
     area.gameObjects.add(projectile)
 }
 
-class ProjectileCollision(val projectile: Projectile): MoveCollision() {
+open class ProjectileCollision(val projectile: Projectile): MoveCollision() {
 
     override var canMoveAfterCollision = true
     override fun collisionHappened(collidedObject: GameObject) {
         if(collidedObject is Player && projectile.shooter != collidedObject){
             collidedObject.isHit(projectile.currentUnitVector)
             AreaManager.getActiveArea()!!.gameObjects.remove(projectile)
+            collidedObject.lastAttacker = projectile.shooter
         }
     }
 }

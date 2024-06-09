@@ -64,6 +64,6 @@ abstract class MoveableObject(gameObjectData: GameObjectData, size: Vector2) :
     }
 
     fun DefaultMoveableObjectData(gameObjectNum: Int, type: GameObjectType): ServerGameObjectData {
-        return ServerGameObjectData(gameObjectNum = gameObjectNum, unitVectorDirection = Pair(currentUnitVector.x, currentUnitVector.y), speed = this.currentSpeed, position = Pair(sprite.x, sprite.y), gameObjectType = type)
+        return ServerGameObjectData(gameObjectNum = gameObjectNum, size = Pair(size.x, size.y), unitVectorDirection = Pair(currentUnitVector.x, currentUnitVector.y), speed = this.currentSpeed, position = Pair(sprite.x, sprite.y), gameObjectType = type)
     }
 }

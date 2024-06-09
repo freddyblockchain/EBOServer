@@ -49,6 +49,13 @@ class PlayerInputHandler {
                     icicleAbility.tryActivate(targetPos, player)
                 }
             }
+            if(action is PlayerAction.SnowballAbility){
+                if(player != null && player.abilities.any { it == AbilityManager.snowballAbility}){
+                    val snowballAbility = player.abilities.first { it == AbilityManager.snowballAbility }
+                    val targetPos = Vector2(action.pos.first, action.pos.second)
+                    snowballAbility.tryActivate(targetPos, player)
+                }
+            }
             if(action is PlayerAction.UpdatePlayerState){
                 if(player != null){
                     AlgorandManager.updatePlayerAbilities(player, address)
