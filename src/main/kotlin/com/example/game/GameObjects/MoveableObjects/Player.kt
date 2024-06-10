@@ -24,8 +24,10 @@ class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int) 
     override var direction = Direction.RIGHT
     override var canChangeDirection = true
     override val collision = CanMoveCollision()
+    val dashDecreaseDecrement = 1.5f
     var address = ""
     var movementFrames: Int = 0
+    val assets: MutableList<Long> = mutableListOf()
     val abilities: MutableList<Ability> = mutableListOf()
     var status: PLAYER_STATE = PLAYER_STATE.ALIVE
     var lastAttacker: Player? = null
@@ -39,6 +41,15 @@ class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int) 
         if (movementFrames > 0 && this.fighterState == FIGHTER_STATE.FREE) {
             this.move(this.currentUnitVector)
             movementFrames -= 1
+        }
+        if(this.fighterState == FIGHTER_STATE.DASHING){
+            if(this.currentSpeed >= normalSpeed){
+                this.currentSpeed -= dashDecreaseDecrement
+            } else {
+                this.currentSpeed = normalSpeed
+                this.fighterState = FIGHTER_STATE.FREE
+            }
+            this.move(this.currentUnitVector)
         }
         statusEffects.forEach { it.triggerEffect(this) }
         super.frameTask()

@@ -3,11 +3,13 @@ package com.example.game.Abilities
 import Player
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
+import com.mygdx.game.Abilities.ABILITY_TYPE
 import com.mygdx.game.Abilities.Ability
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.Projectile
 import com.mygdx.game.GameObjects.MoveableObjects.Projectile.shootProjectile
 import getUnitVectorTowardsPoint
-class ProjectileAbility(cooldown: Float, val projectileCreator: (gameObjectData: GameObjectData, size: Vector2, unitVectorDirection: Vector2) -> Projectile, val size: Vector2): Ability(cooldown = cooldown){
+class ProjectileAbility(cooldown: Float, val projectileCreator: (gameObjectData: GameObjectData, size: Vector2, unitVectorDirection: Vector2) -> Projectile, val size: Vector2, override val abilityType: ABILITY_TYPE): Ability(cooldown = cooldown){
+
     override fun onActivate(targetPos: Vector2, player: Player) {
         val playerPos = player.currentMiddle
         val direction = getUnitVectorTowardsPoint(playerPos,targetPos)

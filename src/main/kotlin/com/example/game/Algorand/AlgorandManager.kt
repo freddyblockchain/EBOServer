@@ -13,11 +13,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AlgorandManager {
     companion object{
-        val accountMmenonic = System.getenv("SERVER_MMEMONIC") ?: throw IllegalStateException("serverAccountNotFound")
-        val serverAccount = Account(accountMmenonic)
+        val secretPath = "/run/secrets/server_mnemonic"
+        val accountMnemonic = if (File(secretPath).exists()) {
+            File(secretPath).readText().trim()
+        } else {
+            //for running it locally
+            System.getenv("SERVER_MMEMONIC") ?: throw IllegalStateException("serverAccountNotFound")
+        }
+        val serverAccount = Account(accountMnemonic)
         val goldAsa = 676111222L
         val fireballAsa = 676532256L
         val icicleAsa = 677924248L
@@ -39,7 +46,7 @@ class AlgorandManager {
         }
         private fun sendMoneyToCoverOptIn(receivingAddress: String){
             val suggestedParams: Response<TransactionParametersResponse> = EBOAlgorandClient.TransactionParams().execute()
-            val amount = 600000 // 0.6 Algo
+            val amount = 650000 // 0. Algo
             val ptxn: Transaction = Transaction.PaymentTransactionBuilder()
                 .sender(serverAccount.address)
                 .amount(amount)
@@ -97,8 +104,9 @@ class AlgorandManager {
                 val EBOAssets = account.assets.filter { it.assetId in abilityAsas }.map { it.assetId }
 
                 EBOAssets.forEach {
-                    val ability = AbilityManager.abilityMap[it]!!
-                    if(ability !in player.abilities){
+                    if(it !in player.assets){
+                        player.assets.add(it)
+                        val ability = AbilityManager.abilityCreatorMap[it]!!()
                         player.abilities.add(ability)
                     }
                 }

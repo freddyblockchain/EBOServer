@@ -2,9 +2,15 @@ version: '3.8'
 
 services:
   app:
-    image: elementalbrawlonline:0.0.1-preview
+    image: frederikblockchain/kotlin-blockchain-server:0.0.1-preview
     network_mode: "host"
     environment:
       - ASSETS_PATH=/app/src/assets
     volumes:
       - ./src/assets:/app/src/assets
+    secrets:
+      - server_mnemonic
+
+secrets:
+  server_mnemonic:
+    file: ./secrets/server_mnemonic.txt

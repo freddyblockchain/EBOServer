@@ -41,8 +41,13 @@ class GameServerMain {
 
     private fun updateGameState() {
         PlayerInputHandler.processActions()
-        for(gameObject in AreaManager.getActiveArea()!!.gameObjects.toMutableList()){
-            gameObject.frameTask()
+        val originalObjects = AreaManager.getActiveArea()!!.gameObjects
+        val activeGameObjects = AreaManager.getActiveArea()!!.gameObjects.toMutableList()
+        for(gameObject in activeGameObjects){
+            //Check to see if other game objects removed the object
+            if(gameObject in originalObjects){
+                gameObject.frameTask()
+            }
         }
         playerMap.toMutableMap().forEach { entry ->
             if (playerTimeMap[entry.key] != null && System.currentTimeMillis() > playerTimeMap[entry.key]!!) {

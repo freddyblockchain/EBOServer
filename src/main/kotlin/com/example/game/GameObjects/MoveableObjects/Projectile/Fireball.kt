@@ -20,4 +20,10 @@ class Fireball(gameObjectData: GameObjectData, size: Vector2, unitVectorDirectio
     init {
         setRotation(unitVectorDirection,this,0f)
     }
+
+    override fun frameTask() {
+        super.frameTask()
+        val breaky = 0
+        println(breaky)
+    }
 }

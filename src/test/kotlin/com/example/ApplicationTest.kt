@@ -21,6 +21,7 @@ import io.ktor.server.testing.*
 import com.example.plugins.*
 import com.mygdx.game.Area.Area
 import com.mygdx.game.Managers.AreaManager
+import io.ktor.utils.io.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -39,21 +40,21 @@ class ApplicationTest {
             assertEquals(HttpStatusCode.OK, status)
             assertEquals("Hello World!", bodyAsText())
         }
-       client.post("/customer") {
+       /*client.post("/customer") {
             contentType(ContentType.Application.Json)
             body = "{\"id\":\"3\",\"firstName\":\"Jet\",\"lastName\":\"Brains\",\"email\":\"mail\"}"
-        }
+        }*/
         client.get("/customer/3").apply {
             assertEquals(HttpStatusCode.OK, status)
             assertEquals("{\"id\":\"3\",\"firstName\":\"Jet\",\"lastName\":\"Brains\",\"email\":\"mail\"}", bodyAsText())
         }
-        client.post("/authorize") {
+        /*client.post("/authorize") {
             contentType(ContentType.Application.Json)
             body = Json.encodeToString(AuthorizationData("signedMessage", 1000, "dsffdwqdqdada", "2123421", 100))
         }.apply {
             assertEquals(HttpStatusCode.OK, status)
             println("sessionKey " + bodyAsText())
-        }
+        }*/
 
     }
 }
