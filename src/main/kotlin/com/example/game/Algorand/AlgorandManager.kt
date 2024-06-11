@@ -19,9 +19,10 @@ class AlgorandManager {
     companion object{
         val secretPath = "/run/secrets/server_mnemonic"
         val accountMnemonic = if (File(secretPath).exists()) {
+            //For running it on a remote server.
             File(secretPath).readText().trim()
         } else {
-            //for running it locally
+            //for running it locally.
             System.getenv("SERVER_MMEMONIC") ?: throw IllegalStateException("serverAccountNotFound")
         }
         val serverAccount = Account(accountMnemonic)
@@ -33,15 +34,8 @@ class AlgorandManager {
         val abilityAsas = listOf(fireballAsa, icicleAsa, snowballAsa, dashAsa)
 
         fun handleNewPlayer(newAddress: String){
-            val coroutineScope = CoroutineScope(Dispatchers.Default)
             if(!playerIsOptedIntoGold(newAddress)){
                 sendMoneyToCoverOptIn(newAddress)
-                /*coroutineScope.launch {
-                    // wait for client to opt into gold
-                    delay(10000)
-                    println("sending gold to new player. Have waited for player to receive money and opt into gold.")
-                    sendGold(newAddress)
-                }*/
             }
         }
         private fun sendMoneyToCoverOptIn(receivingAddress: String){

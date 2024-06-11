@@ -7,14 +7,19 @@ import com.example.game.Networking.Models.GameState
 import com.example.game.Networking.Models.PlayerEvent
 import com.example.game.Networking.Models.ServerGameObjectConverter
 import com.mygdx.game.Managers.AreaManager
+import java.util.UUID
 
 val frameTime = 20
 val tickTime = 1000L / frameTime// Frame time in milliseconds
-var globalGameState = GameState(listOf(),0, listOf())
+val firstUUID = UUID.randomUUID().toString()
+var activeUUIDS = mutableListOf<String>(firstUUID)
+var globalGameState = GameState(listOf(),0, listOf(), firstUUID)
 var delayTime = 0L
 var id = 0
 val playerEvents = mutableListOf<PlayerEvent>()
 val eventDeletionTime = 150
+
+val maxActiveUUIDs = 5
 class GameServerMain {
     fun mainLoop() {
         while (true) {
@@ -63,6 +68,11 @@ class GameServerMain {
             val gameStateConverter = it as ServerGameObjectConverter
             gameStateConverter.converToServerGameObject()
         }
-        return GameState(serverGameObjects, System.currentTimeMillis(), playerEvents)
+        val nextUUID = UUID.randomUUID().toString()
+        activeUUIDS.add(nextUUID)
+        if(activeUUIDS.size > maxActiveUUIDs){
+            activeUUIDS.removeAt(0)
+        }
+        return GameState(serverGameObjects, System.currentTimeMillis(), playerEvents, nextUUID)
     }
 }

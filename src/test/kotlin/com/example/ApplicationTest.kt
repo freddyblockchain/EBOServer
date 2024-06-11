@@ -2,18 +2,7 @@
 
 package com.example
 
-import Customer
-import com.example.game.Networking.GameServerInit
-import com.example.models.AuthorizationData
-import io.ktor.server.routing.*
 import io.ktor.http.*
-import io.ktor.server.auth.*
-import io.ktor.util.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.plugins.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.request.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlin.test.*
@@ -22,8 +11,6 @@ import com.example.plugins.*
 import com.mygdx.game.Area.Area
 import com.mygdx.game.Managers.AreaManager
 import io.ktor.utils.io.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class ApplicationTest {
     @OptIn(InternalAPI::class)
