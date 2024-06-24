@@ -6,6 +6,7 @@ import com.example.game.GameObjectData
 import com.example.game.Managers.GameObjectNumManager
 import com.example.game.Networking.GameServerInit
 import com.example.game.Networking.Models.*
+import com.mygdx.game.Area.Area
 import com.mygdx.game.Collition.MoveCollision
 import com.mygdx.game.GameObjects.GameObject.GameObject
 import com.mygdx.game.GameObjects.GameObject.MoveableObject
@@ -14,7 +15,7 @@ import com.mygdx.game.minus
 import com.mygdx.game.plus
 import com.mygdx.game.times
 
-abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var unitVectorDirection: Vector2) : MoveableObject(gameObjectData, size), ServerGameObjectConverter{
+abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var unitVectorDirection: Vector2, currentArea: Area) : MoveableObject(gameObjectData, size, currentArea), ServerGameObjectConverter{
 
     abstract val gameObjectType: GameObjectType
     override val collision = ProjectileCollision(this)
@@ -31,7 +32,7 @@ abstract class Projectile(gameObjectData: GameObjectData, size: Vector2, var uni
 }
 
 fun Player.shootProjectile(projectile: Projectile){
-    val area = AreaManager.getActiveArea()!!
+    val area = projectile.currentArea
     val projectileStartPos = this.currentMiddle + (projectile.unitVectorDirection * 50f) - Vector2(projectile.size.x / 2,projectile.size.y / 2)
     projectile.setPosition(projectileStartPos)
     projectile.shooter = this
@@ -44,7 +45,7 @@ open class ProjectileCollision(val projectile: Projectile): MoveCollision() {
     override fun collisionHappened(collidedObject: GameObject) {
         if(collidedObject is Player && projectile.shooter != collidedObject){
             collidedObject.isHit(projectile.currentUnitVector)
-            AreaManager.getActiveArea()!!.gameObjects.remove(projectile)
+            projectile.currentArea.gameObjects.remove(projectile)
             collidedObject.lastAttacker = projectile.shooter
         }
     }

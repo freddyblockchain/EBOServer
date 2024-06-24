@@ -1,5 +1,6 @@
 package com.example.game
 import GameObjectFactory.GetGameObjectsFromJson
+import com.mygdx.game.Area.Area
 import com.mygdx.game.FileHandler.Companion.getFileJson
 import com.mygdx.game.GameObjects.GameObject.GameObject
 import kotlinx.serialization.decodeFromString
@@ -12,8 +13,8 @@ class JsonParser {
             val json = Json { ignoreUnknownKeys = true } // Configure as needed
             return json.decodeFromString<Root>(objectStrings)
         }
-        fun getGameObjects(root: Root): List<GameObject>{
-            return GetGameObjectsFromJson(root.entities, root);
+        fun getGameObjects(root: Root, area: Area): List<GameObject>{
+            return GetGameObjectsFromJson(root.entities, root, area);
         }
     }
 }

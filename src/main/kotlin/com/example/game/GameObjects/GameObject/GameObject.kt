@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
+import com.mygdx.game.Area.Area
 import com.mygdx.game.Collisions.CanMoveCollision
 import com.mygdx.game.Collition.Collision
 import com.mygdx.game.Collition.CollisionMask
@@ -13,7 +14,7 @@ import com.mygdx.game.InitPolygon
 import com.mygdx.game.InitSprite
 import com.mygdx.game.Managers.AreaManager
 
-abstract class GameObject(gameObjectData: GameObjectData, val size: Vector2){
+abstract class GameObject(gameObjectData: GameObjectData, val size: Vector2, var currentArea: Area){
     val initPosition = Vector2(gameObjectData.x.toFloat(), gameObjectData.y.toFloat())
     val topleft = Vector2(initPosition.x,initPosition.y + size.y)
     val topright = Vector2(initPosition.x + size.x,initPosition.y + size.y)
@@ -35,6 +36,11 @@ abstract class GameObject(gameObjectData: GameObjectData, val size: Vector2){
     open val collision: Collision = CanMoveCollision()
     val gameObjectIid = gameObjectData.iid
     var collidingObjects: List<GameObject> = listOf()
+
+    init {
+        currentArea.gameObjects.add(this)
+    }
+
     open fun frameTask(){
     }
     open fun initObject(){
@@ -54,9 +60,9 @@ abstract class GameObject(gameObjectData: GameObjectData, val size: Vector2){
     }
 
     fun remove(){
-        AreaManager.getActiveArea()!!.gameObjects.remove(this)
+        this.currentArea.gameObjects.remove(this)
     }
     fun add(){
-        AreaManager.getActiveArea()!!.gameObjects.add(this)
+        this.currentArea.gameObjects.add(this)
     }
 }

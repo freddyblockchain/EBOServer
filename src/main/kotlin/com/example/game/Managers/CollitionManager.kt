@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.FloatArray
 import com.example.game.anyPointInPolygon
+import com.mygdx.game.Area.Area
 import com.mygdx.game.Collisions.AreaEntranceCollition
 import com.mygdx.game.Collition.Collision
 import com.mygdx.game.Collition.MoveCollision
@@ -58,12 +59,12 @@ class CollitionManager {
             }
         }
 
-        fun entityWithinLocations(polygonToCheck: Polygon): Boolean {
+        fun entityWithinLocations(polygonToCheck: Polygon, area: Area): Boolean {
             var inLocation1 = false
             for (point in getPolygonPoints(polygonToCheck)) {
                 inLocation1 = false
                 //Ground is the area, that we can actually walk on.
-                val grounds = AreaManager.getActiveArea()!!.gameObjects.filter { it is Ground }
+                val grounds = area.gameObjects.filter { it is Ground }
                 for (rectangle in grounds.map { x -> x.sprite.boundingRectangle }) {
                     if (rectangle.contains(point)) {
                         inLocation1 = true

@@ -6,21 +6,13 @@ import com.mygdx.game.GameObjects.GameObject.GameObject
 
 class AreaManager {
     companion object {
+        var currentVersion: Int = 1
         val areas = mutableListOf<Area>()
-        private var activeArea: Area? = null
 
-        fun setActiveArea(areaIdentifier: String){
-            val areaWithIdentifier = areas.find { it.areaIdentifier == areaIdentifier }
-            activeArea = areaWithIdentifier
-        }
-        fun getActiveArea(): Area?{
-            return activeArea
-        }
+        val startingAreaName = "World1"
 
-        fun getObjectsWithCollisionType(collisionType: CollisionType): List<GameObject>{
-            val activeObjects = activeArea!!.gameObjects
-
-            return activeObjects.filter { it.collision.collitionType == collisionType }
+        fun getStartingArea():Area{
+            return areas.first{it.areaIdentifier == startingAreaName}
         }
 
         fun getObjectWithIid(iidToFind: String): GameObject {

@@ -19,7 +19,6 @@ class GameServerInit {
             initMappings()
             initAreas()
             initObjects()
-            AreaManager.setActiveArea("World1")
         }
 
         fun InitPlayer(address: String, port: Int): Int{
@@ -31,12 +30,10 @@ class GameServerInit {
                 return player.playerNum
             }
             val gameObjectNum = GameObjectNumManager.getNextGameNum()
-            val player = Player(GameObjectData(x = playerInitPosition.x.toInt(), y = playerInitPosition.y.toInt()), Vector2(32f,32f), gameObjectNum)
+            val player = Player(GameObjectData(x = playerInitPosition.x.toInt(), y = playerInitPosition.y.toInt()), Vector2(32f,32f), gameObjectNum, AreaManager.getStartingArea())
             player.address = address
             SessionManager.connectionMap[address] = ConnectionSettings(port)
             SessionManager.playerMap[address] = player
-            //player.abilities.add(FireballAbility(player))
-            AreaManager.getActiveArea()!!.gameObjects.add(player)
             return gameObjectNum
         }
     }

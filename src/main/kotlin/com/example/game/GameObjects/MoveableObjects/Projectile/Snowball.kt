@@ -3,6 +3,7 @@ package com.example.game.GameObjects.MoveableObjects.Projectile
 import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
 import com.example.game.Networking.Models.GameObjectType
+import com.mygdx.game.Area.Area
 import com.mygdx.game.CannotMoveStrategy.RemoveObject
 import com.mygdx.game.Enums.Direction
 import com.mygdx.game.Enums.getDirectionFromUnitVector
@@ -12,7 +13,7 @@ import com.mygdx.game.GameObjects.MoveableObjects.Projectile.ProjectileCollision
 import com.mygdx.game.Managers.AreaManager
 
 
-class Snowball(val gameObjectData: GameObjectData, size: Vector2, unitVectorDirection: Vector2) : Projectile(gameObjectData, size, unitVectorDirection) {
+class Snowball(val gameObjectData: GameObjectData, size: Vector2, unitVectorDirection: Vector2, currentArea: Area) : Projectile(gameObjectData, size, unitVectorDirection, currentArea) {
     override var normalSpeed = 3f
     override val gameObjectType = GameObjectType.SNOWBALL
     override var currentSpeed = normalSpeed
@@ -38,15 +39,15 @@ fun getSnowballSize(lvl: Int): Vector2{
 class SnowballCollision(val snowball: Snowball): ProjectileCollision(snowball){
     override fun collisionHappened(collidedObject: GameObject) {
         if(collidedObject is Fireball){
-            AreaManager.getActiveArea()!!.gameObjects.remove(collidedObject)
+            collidedObject.currentArea.gameObjects.remove(collidedObject)
             when(snowball.lvl){
-                0 -> AreaManager.getActiveArea()!!.gameObjects.remove(snowball)
+                0 -> snowball.currentArea.gameObjects.remove(snowball)
                 1 -> createNewSnowballs(collidedObject.currentUnitVector, 0, collidedObject)
                 2 -> createNewSnowballs(collidedObject.currentUnitVector, 1, collidedObject)
             }
         }
         if(collidedObject is Snowball && snowball.lvl < collidedObject.lvl){
-            AreaManager.getActiveArea()!!.gameObjects.remove(snowball)
+            collidedObject.currentArea.gameObjects.remove(snowball)
         }
         super.collisionHappened(collidedObject)
     }
@@ -64,8 +65,8 @@ class SnowballCollision(val snowball: Snowball): ProjectileCollision(snowball){
         val snowball2Direction = Vector2(newX2, newY2).nor()
 
         val size = getSnowballSize(lvl)
-        val snowball1 = Snowball(snowball.gameObjectData, size, snowball1Direction)
-        val snowball2 = Snowball(snowball.gameObjectData, size, snowball2Direction)
+        val snowball1 = Snowball(snowball.gameObjectData, size, snowball1Direction, snowball.currentArea)
+        val snowball2 = Snowball(snowball.gameObjectData, size, snowball2Direction, snowball.currentArea)
         snowball1.lvl = lvl
         snowball2.lvl = lvl
         snowball1.setPosition(snowball.currentPosition())
@@ -73,8 +74,8 @@ class SnowballCollision(val snowball: Snowball): ProjectileCollision(snowball){
         snowball1.shooter = fireball.shooter
         snowball2.shooter = fireball.shooter
 
-        AreaManager.getActiveArea()!!.gameObjects.remove(snowball)
-        AreaManager.getActiveArea()!!.gameObjects.addAll(listOf(snowball1, snowball2))
+        snowball.currentArea.gameObjects.remove(snowball)
+        snowball.currentArea.gameObjects.addAll(listOf(snowball1, snowball2))
 
     }
 }

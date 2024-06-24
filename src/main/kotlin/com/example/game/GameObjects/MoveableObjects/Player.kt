@@ -6,6 +6,7 @@ import com.example.game.Networking.GameServerInit
 import com.example.game.Networking.Models.*
 import com.example.game.playerEvents
 import com.mygdx.game.Abilities.Ability
+import com.mygdx.game.Area.Area
 import com.mygdx.game.CannotMoveStrategy.NoAction
 import com.mygdx.game.Collisions.AreaEntranceCollition
 import com.mygdx.game.Collisions.CanMoveCollision
@@ -15,7 +16,7 @@ import com.mygdx.game.StatusEffects.StatusEffect
 
 enum class PLAYER_STATE { ALIVE, DEAD }
 
-class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int) : FightableObject(gameObjectData, size),
+class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int, currentArea: Area) : FightableObject(gameObjectData, size, currentArea),
     ServerGameObjectConverter {
 
     override var normalSpeed = 4f
@@ -72,8 +73,7 @@ class Player(gameObjectData: GameObjectData, size: Vector2, val playerNum: Int) 
         this.currentUnitVector = Vector2(0f, 0f)
         this.currentSpeed = this.normalSpeed
 
-        val areaEnteredCollisions: List<AreaEntranceCollition> =
-            AreaManager.getActiveArea()!!.gameObjects.map { it.collision }.filterIsInstance<AreaEntranceCollition>()
+        val areaEnteredCollisions: List<AreaEntranceCollition> = this.currentArea.gameObjects.map { it.collision }.filterIsInstance<AreaEntranceCollition>()
 
         areaEnteredCollisions.forEach {
             it.movedOutside(this)

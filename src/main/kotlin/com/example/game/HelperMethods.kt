@@ -21,24 +21,47 @@ fun initAreas(){
     val directory = File(directoryPath)
 
     directory.listFiles().forEach { level ->
-        val area = HandleArea(level.name)
+        val area = populateArea(level.name, 0)
         if(!(AreaManager.areas.any { it.areaIdentifier == area.areaIdentifier })){
             AreaManager.areas.add(area)
         }
     }
-
 }
 
-fun HandleArea(areaName: String): Area {
-    val root = JsonParser.getRoot("$basePath/levels/${areaName}/data.json")
-    val correspondingArea = AreaManager.areas.firstOrNull { it.areaIdentifier == root.customFields.World }
+fun cloneArea(areaIdentifier: String){
+    val directoryPath = "$basePath/levels/"  // Path inside the assets directory
+    val directory = File(directoryPath)
+
+    val areaToClone = AreaManager.areas.first() { it.areaIdentifier == areaIdentifier }
+    var newArea: Area
+
+    directory.listFiles().forEach { level ->
+        if(level.name in areaToClone.levelList){
+            newArea = populateArea(level.name, AreaManager.currentVersion)
+            if(!(AreaManager.areas.any { it.areaIdentifier == newArea.areaIdentifier && it.version == newArea.version})){
+                AreaManager.areas.add(newArea)
+            }
+        }
+    }
+    AreaManager.currentVersion += 1
+}
+
+fun populateArea(levelName: String, version: Int): Area {
+    //puts all the areas in one world.
+    val root = JsonParser.getRoot("$basePath/levels/${levelName}/data.json")
+    val correspondingArea = AreaManager.areas.firstOrNull { it.areaIdentifier == root.customFields.World && version == it.version }
         ?:
-        Area(root.customFields.World)
-    val entityObjects = JsonParser.getGameObjects(root)
+        Area(root.customFields.World, version)
+    correspondingArea.levelList.add(levelName)
+    val entityObjects = JsonParser.getGameObjects(root, correspondingArea)
     correspondingArea.gameObjects.addAll(entityObjects)
-    val ground = Ground(GameObjectData(x = root.x, y = (-root.y) - root.height), Vector2(root.width.toFloat(), root.height.toFloat()), "levels/${areaName}/_composite.png")
+    val ground = Ground(GameObjectData(x = root.x, y = (-root.y) - root.height), Vector2(root.width.toFloat(), root.height.toFloat()), "levels/${levelName}/_composite.png", correspondingArea)
     correspondingArea.gameObjects.add(ground)
     return correspondingArea
+}
+
+fun changeArea(){
+
 }
 
 fun initObjects(){

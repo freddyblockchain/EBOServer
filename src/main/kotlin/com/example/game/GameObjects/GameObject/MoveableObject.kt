@@ -5,16 +5,16 @@ import com.badlogic.gdx.math.Vector2
 import com.example.game.GameObjectData
 import com.example.game.Networking.Models.GameObjectType
 import com.example.game.Networking.Models.ServerGameObjectData
+import com.mygdx.game.Area.Area
 import com.mygdx.game.CannotMoveStrategy.CannotMoveStrategy
 import com.mygdx.game.Collition.CollisionType
-import com.mygdx.game.Managers.AreaManager
 import com.mygdx.game.Managers.CollitionManager.Companion.entityWithinLocations
 import com.mygdx.game.Managers.CollitionManager.Companion.handleMoveCollisions
 import com.mygdx.game.plus
 import com.mygdx.game.times
 
-abstract class MoveableObject(gameObjectData: GameObjectData, size: Vector2) :
-    GameObject(gameObjectData, size), RotationalObject by DefaultRotationalObject(),
+abstract class MoveableObject(gameObjectData: GameObjectData, size: Vector2, currentArea: Area) :
+    GameObject(gameObjectData, size, currentArea), RotationalObject by DefaultRotationalObject(),
     DirectionalObject {
     abstract var currentSpeed: Float
     abstract var normalSpeed: Float
@@ -52,8 +52,9 @@ abstract class MoveableObject(gameObjectData: GameObjectData, size: Vector2) :
     fun moveObject(movementIncrement: Vector2): Boolean{
         val sprite = this.sprite
         val polygonToCheck = Polygon(this.polygon.transformedVertices + movementIncrement)
-        val canMove = handleMoveCollisions(this,polygonToCheck,AreaManager.getObjectsWithCollisionType(CollisionType.MOVE))
-        val inLocation = entityWithinLocations(polygonToCheck)
+        val moveCollisionObjects = this.currentArea.gameObjects.filter { it.collision.collitionType == CollisionType.MOVE }
+        val canMove = handleMoveCollisions(this,polygonToCheck,moveCollisionObjects)
+        val inLocation = entityWithinLocations(polygonToCheck, this.currentArea)
         if(inLocation && canMove){
             this.setPosition(Vector2(sprite.x,sprite.y) + movementIncrement)
             return true

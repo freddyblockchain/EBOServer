@@ -3,8 +3,8 @@ package com.example.routes
 import VerificationManager
 import com.example.game.Algorand.AlgorandManager
 import com.example.game.Networking.GameServerInit
-import com.example.game.globalGameState
 import com.example.models.AuthenticationData
+import com.mygdx.game.Managers.AreaManager
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -24,7 +24,7 @@ fun Route.authenticate() {
                     val algorandAddress = authenticationData.verificationData.address
                     AlgorandManager.handleNewPlayer(algorandAddress)
                     val playerNum = GameServerInit.InitPlayer(algorandAddress, authenticationData.localPort)
-                    call.respond(HttpStatusCode.OK, PlayerInitData(algorandAddress, playerNum, globalGameState.serverUUID))
+                    call.respond(HttpStatusCode.OK, PlayerInitData(algorandAddress, playerNum, AreaManager.getStartingArea().gameState.serverUUID))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized, "Authentification failed")
                 }

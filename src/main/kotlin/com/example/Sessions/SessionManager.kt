@@ -16,11 +16,12 @@ class SessionManager {
         fun removePlayer(address: String){
             val player = playerMap[address]
             if(player != null){
-                AreaManager.getActiveArea()!!.gameObjects.remove(player)
+                player.currentArea!!.gameObjects.remove(player)
             }
             playerTimeMap.remove(address)
             playerMap.remove(address)
             connectionMap.remove(address)
+            player
         }
     }
 }
